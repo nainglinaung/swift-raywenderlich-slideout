@@ -19,7 +19,7 @@ enum SlideOutState {
 
 let centerPanelExpandedOffset:CGFloat = 60
 
-class ContainerViewController: UIViewController, CenterViewControllerDelegate{
+class ContainerViewController: UIViewController, CenterViewControllerDelegate, UIGestureRecognizerDelegate{
     
     
     
@@ -44,6 +44,10 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate{
         view.addSubview(centerNavigationController.view)
         addChildViewController(centerNavigationController)
         centerNavigationController.didMoveToParentViewController(self)
+        
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "handlePanGesture:")
+        
+        centerNavigationController.view.addGestureRecognizer(panGestureRecognizer)
 
     }
   
@@ -158,6 +162,33 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate{
     // MARK: Gesture recognizer
   
     func handlePanGesture(recognizer: UIPanGestureRecognizer) {
+        let gestureIsDraggingFromLeftToRight = (recognizer.velocityInView(view).x > 0)
+        
+        switch recognizer.state {
+        case .Began:
+            if currentState == .BothCollapsed {
+                if gestureIsDraggingFromLeftToRight {
+                    addLeftPanelViewController()
+                } else {
+                    addRightPanelViewController()
+                }
+            }
+        case .Changed:
+            recognizer.view!.center.x = recognizer.view!.center.x + recognizer.translationInView(view).x
+            recognizer.setTranslation(CGPointZero, inView: view)
+        case .Ended:
+            if leftViewController != nil {
+                let hasMovedGreaterThanHalfway = recognizer.view?.center.x > view.bounds.size.width
+                animateLeftPanel(shouldExpand: hasMovedGreaterThanHalfway)
+            } else {
+                let hasMovedGreaterThanHalfway = recognizer.view?.center.x < 0
+                animateRightPanel(shouldExpand: hasMovedGreaterThanHalfway)
+            }
+        default:
+            break
+        }
+        
+        
     }
 }
 
