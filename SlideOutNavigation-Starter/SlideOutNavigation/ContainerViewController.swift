@@ -82,42 +82,7 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate{
         
     }
     
-//    
-//    func addRightPanelViewController() {
-//        if (rightViewController == nil) {
-//            rightViewController = UIStoryboard.rightViewController()
-//            rightViewController!.animals = Animal.allDogs()
-//            
-//            addChildSidePanelController(rightViewController!)
-//        }
-//    }
-//    
-//    func animateRightPanel(#shouldExpand: Bool) {
-//        if (shouldExpand) {
-//            currentState = .RightPanelExpanded
-//            
-//            animateCenterPanelXPosition(targetPosition: -CGRectGetWidth(centerNavigationController.view.frame) + centerPanelExpandedOffset)
-//        } else {
-//            animateCenterPanelXPosition(targetPosition: 0) { _ in
-//                self.currentState = .BothCollapsed
-//                
-//                self.rightViewController!.view.removeFromSuperview()
-//                self.rightViewController = nil;
-//            }
-//        }
-//    }
-//    
-//    
-//    func toggleRightPanel() {
-//        let notAlreadyExpanded = (currentState != .RightPanelExpanded)
-//        
-//        if notAlreadyExpanded {
-//            addRightPanelViewController()
-//        }
-//        
-//        animateRightPanel(shouldExpand: notAlreadyExpanded)
-//    }
-    
+
     
     func toggleRightPanel() {
         let notAlreadyExpanded = (currentState != .RightPanelExpanded)
@@ -126,6 +91,17 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate{
             addRightPanelViewController()
         }
         animateRightPanel(shouldExpand: notAlreadyExpanded)
+    }
+    
+    func collapseSidePanels() {
+        switch currentState {
+        case .RightPanelExpanded:
+            toggleRightPanel()
+        case .LeftPanelExpanded:
+            toggleLeftPanel()
+        default:
+            break
+        }
     }
     
     func addRightPanelViewController() {
@@ -154,6 +130,7 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate{
     
     
     func addChildSidePanelController(sidePanelController:SidePanelViewController){
+        sidePanelController.delegate = centerViewController
         view.insertSubview(sidePanelController.view, atIndex: 0)
         addChildViewController(sidePanelController)
         sidePanelController.didMoveToParentViewController(self)

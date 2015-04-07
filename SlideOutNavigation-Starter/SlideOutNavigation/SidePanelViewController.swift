@@ -16,7 +16,8 @@ protocol SidePanelViewControllerDelegate {
 class SidePanelViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-        
+    var delegate: SidePanelViewControllerDelegate?
+    
     var animals: Array<Animal>!
     
     struct TableView {
@@ -27,7 +28,6 @@ class SidePanelViewController: UIViewController, UITableViewDataSource, UITableV
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.reloadData()
     }
     
@@ -47,9 +47,13 @@ class SidePanelViewController: UIViewController, UITableViewDataSource, UITableV
         return cell
     }
     
+    
+    
     // Mark: Table View Delegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let selectedAnimal = animals[indexPath.row]
+        delegate?.animalSelected(selectedAnimal)
     }
     
 }

@@ -18,13 +18,18 @@ protocol CenterViewControllerDelegate {
 
 
 
-class CenterViewController: UIViewController {
+class CenterViewController: UIViewController,SidePanelViewControllerDelegate {
     
     @IBOutlet weak private var imageView: UIImageView!
     @IBOutlet weak private var titleLabel: UILabel!
     @IBOutlet weak private var creatorLabel: UILabel!
     
-
+    func animalSelected(animal: Animal) {
+        imageView.image = animal.image
+        titleLabel.text = animal.title
+        creatorLabel.text = animal.creator
+        delegate?.collapseSidePanels?()
+    }
 
     var delegate: CenterViewControllerDelegate?
     
