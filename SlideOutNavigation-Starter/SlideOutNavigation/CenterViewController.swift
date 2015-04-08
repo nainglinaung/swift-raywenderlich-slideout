@@ -17,7 +17,6 @@ protocol CenterViewControllerDelegate {
 
 
 
-
 class CenterViewController: UIViewController,SidePanelViewControllerDelegate {
     
     @IBOutlet weak private var imageView: UIImageView!

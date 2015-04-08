@@ -37,6 +37,7 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         centerViewController = UIStoryboard.centerViewController()
         centerViewController.delegate = self
         
@@ -86,15 +87,13 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate, U
         
     }
     
-
-    
     func toggleRightPanel() {
         let notAlreadyExpanded = (currentState != .RightPanelExpanded)
-        
         if notAlreadyExpanded {
             addRightPanelViewController()
         }
         animateRightPanel(shouldExpand: notAlreadyExpanded)
+        
     }
     
     func collapseSidePanels() {
@@ -109,8 +108,7 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate, U
     }
     
     func addRightPanelViewController() {
-        if rightViewController == nil
-        {
+        if rightViewController == nil {
             rightViewController = UIStoryboard.rightViewController()
             rightViewController?.animals = Animal.allDogs()
             addChildSidePanelController(rightViewController!)
@@ -132,7 +130,6 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate, U
     }
     
     
-    
     func addChildSidePanelController(sidePanelController:SidePanelViewController){
         sidePanelController.delegate = centerViewController
         view.insertSubview(sidePanelController.view, atIndex: 0)
@@ -149,16 +146,10 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate, U
     
     
     func showShadowForCenterViewController(shouldShowShadow: Bool) {
-        if shouldShowShadow {
-            centerNavigationController.view.layer.shadowOpacity = 0.8
-        } else {
-            centerNavigationController.view.layer.shadowOpacity = 0
-        }
+        centerNavigationController.view.layer.shadowOpacity = shouldShowShadow ?0.8:0
     }
     
     
-   
-  
     // MARK: Gesture recognizer
   
     func handlePanGesture(recognizer: UIPanGestureRecognizer) {
@@ -167,11 +158,7 @@ class ContainerViewController: UIViewController, CenterViewControllerDelegate, U
         switch recognizer.state {
         case .Began:
             if currentState == .BothCollapsed {
-                if gestureIsDraggingFromLeftToRight {
-                    addLeftPanelViewController()
-                } else {
-                    addRightPanelViewController()
-                }
+                gestureIsDraggingFromLeftToRight ?addLeftPanelViewController() : addRightPanelViewController()
             }
         case .Changed:
             recognizer.view!.center.x = recognizer.view!.center.x + recognizer.translationInView(view).x
